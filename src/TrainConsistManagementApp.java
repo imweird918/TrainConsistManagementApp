@@ -1,7 +1,5 @@
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 public class TrainConsistManagementApp {
 
@@ -14,18 +12,19 @@ public class TrainConsistManagementApp {
             this.seatCount = seatCount;
         }
 
-        public String getType() { return type; }
         public int getSeatCount() { return seatCount; }
+        public String getType() { return type; }
 
         @Override
         public String toString() {
-            return String.format("Capacity -> %d", seatCount);
+            return String.format("%s -> %d", type, seatCount);
         }
     }
 
-    public static Map<String, List<Coach>> groupByType(List<Coach> inventory) {
+    public static int calculateTotalSeats(List<Coach> inventory) {
         return inventory.stream()
-                .collect(Collectors.groupingBy(Coach::getType));
+                .map(Coach::getSeatCount) // Extract capacity
+                .reduce(0, Integer::sum);  // Aggregate into total
     }
 
     public static void main(String[] args) {
@@ -34,19 +33,13 @@ public class TrainConsistManagementApp {
         inventory.add(new Coach("AC Chair", 56));
         inventory.add(new Coach("First Class", 24));
         inventory.add(new Coach("Sleeper", 70));
-        inventory.add(new Coach("AC Chair", 60));
 
-        System.out.println("All Coaches:");
-        inventory.forEach(c -> System.out.println(c.getType() + " -> " + c.getSeatCount()));
+        System.out.println("Coaches in Train:");
+        inventory.forEach(System.out::println);
 
-        Map<String, List<Coach>> grouped = groupByType(inventory);
+        int totalSeats = calculateTotalSeats(inventory);
 
-        System.out.println("\nGrouped Coaches:");
-        grouped.forEach((type, list) -> {
-            System.out.println("\nCoach Type: " + type);
-            list.forEach(System.out::println);
-        });
-
-        System.out.println("\nUC9 grouping completed...");
+        System.out.println("\nTotal Seating Capacity of Train: " + totalSeats);
+        System.out.println("\nUC10 aggregation completed...");
     }
 }
