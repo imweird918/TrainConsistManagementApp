@@ -1,85 +1,87 @@
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Arrays;
+import java.util.*;
 
 public class TrainConsistManagementAppTest {
 
     @Test
-    void testFilter_CapacityGreaterThanThreshold() {
+    void testGrouping_BogiesGroupedByType() {
         List<TrainConsistManagementApp.Coach> inventory = Arrays.asList(
-                new TrainConsistManagementApp.Coach("Express", 70)
+                new TrainConsistManagementApp.Coach("Sleeper", 72),
+                new TrainConsistManagementApp.Coach("Sleeper", 70)
         );
-        List<TrainConsistManagementApp.Coach> result = TrainConsistManagementApp.filterHighCapacity(inventory, 60);
+        Map<String, List<TrainConsistManagementApp.Coach>> result = TrainConsistManagementApp.groupByType(inventory);
+        assertTrue(result.containsKey("Sleeper"));
+        assertEquals(2, result.get("Sleeper").size());
+    }
+
+    @Test
+    void testGrouping_MultipleBogiesInSameGroup() {
+        List<TrainConsistManagementApp.Coach> inventory = Arrays.asList(
+                new TrainConsistManagementApp.Coach("AC Chair", 56),
+                new TrainConsistManagementApp.Coach("AC Chair", 60)
+        );
+        Map<String, List<TrainConsistManagementApp.Coach>> result = TrainConsistManagementApp.groupByType(inventory);
+        assertEquals(2, result.get("AC Chair").size());
+    }
+
+    @Test
+    void testGrouping_DifferentBogieTypes() {
+        List<TrainConsistManagementApp.Coach> inventory = Arrays.asList(
+                new TrainConsistManagementApp.Coach("Sleeper", 72),
+                new TrainConsistManagementApp.Coach("AC Chair", 56)
+        );
+        Map<String, List<TrainConsistManagementApp.Coach>> result = TrainConsistManagementApp.groupByType(inventory);
+        assertEquals(2, result.size());
+        assertTrue(result.containsKey("Sleeper") && result.containsKey("AC Chair"));
+    }
+
+    @Test
+    void testGrouping_EmptyBogieList() {
+        List<TrainConsistManagementApp.Coach> inventory = new ArrayList<>();
+        Map<String, List<TrainConsistManagementApp.Coach>> result = TrainConsistManagementApp.groupByType(inventory);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void testGrouping_SingleBogieCategory() {
+        List<TrainConsistManagementApp.Coach> inventory = Arrays.asList(
+                new TrainConsistManagementApp.Coach("General", 90)
+        );
+        Map<String, List<TrainConsistManagementApp.Coach>> result = TrainConsistManagementApp.groupByType(inventory);
         assertEquals(1, result.size());
+        assertTrue(result.containsKey("General"));
     }
 
     @Test
-    void testFilter_CapacityEqualToThreshold() {
+    void testGrouping_MapContainsCorrectKeys() {
         List<TrainConsistManagementApp.Coach> inventory = Arrays.asList(
-                new TrainConsistManagementApp.Coach("Standard", 60)
+                new TrainConsistManagementApp.Coach("Sleeper", 72),
+                new TrainConsistManagementApp.Coach("AC Chair", 56),
+                new TrainConsistManagementApp.Coach("First Class", 24)
         );
-        // Should be empty because condition is > 60
-        List<TrainConsistManagementApp.Coach> result = TrainConsistManagementApp.filterHighCapacity(inventory, 60);
-        assertTrue(result.isEmpty());
+        Map<String, List<TrainConsistManagementApp.Coach>> result = TrainConsistManagementApp.groupByType(inventory);
+        assertTrue(result.keySet().containsAll(Arrays.asList("Sleeper", "AC Chair", "First Class")));
     }
 
     @Test
-    void testFilter_CapacityLessThanThreshold() {
+    void testGrouping_GroupSizeValidation() {
         List<TrainConsistManagementApp.Coach> inventory = Arrays.asList(
-                new TrainConsistManagementApp.Coach("Mini", 30)
+                new TrainConsistManagementApp.Coach("Sleeper", 72),
+                new TrainConsistManagementApp.Coach("Sleeper", 70),
+                new TrainConsistManagementApp.Coach("AC Chair", 56)
         );
-        List<TrainConsistManagementApp.Coach> result = TrainConsistManagementApp.filterHighCapacity(inventory, 60);
-        assertTrue(result.isEmpty());
+        Map<String, List<TrainConsistManagementApp.Coach>> result = TrainConsistManagementApp.groupByType(inventory);
+        assertEquals(2, result.get("Sleeper").size());
+        assertEquals(1, result.get("AC Chair").size());
     }
 
     @Test
-    void testFilter_MultipleBogiesMatching() {
-        List<TrainConsistManagementApp.Coach> inventory = Arrays.asList(
-                new TrainConsistManagementApp.Coach("A", 70),
-                new TrainConsistManagementApp.Coach("B", 80),
-                new TrainConsistManagementApp.Coach("C", 20)
-        );
-        List<TrainConsistManagementApp.Coach> result = TrainConsistManagementApp.filterHighCapacity(inventory, 60);
-        assertEquals(2, result.size());
-    }
-
-    @Test
-    void testFilter_NoBogiesMatching() {
-        List<TrainConsistManagementApp.Coach> inventory = Arrays.asList(
-                new TrainConsistManagementApp.Coach("A", 10),
-                new TrainConsistManagementApp.Coach("B", 20)
-        );
-        List<TrainConsistManagementApp.Coach> result = TrainConsistManagementApp.filterHighCapacity(inventory, 60);
-        assertEquals(0, result.size());
-    }
-
-    @Test
-    void testFilter_AllBogiesMatching() {
-        List<TrainConsistManagementApp.Coach> inventory = Arrays.asList(
-                new TrainConsistManagementApp.Coach("A", 100),
-                new TrainConsistManagementApp.Coach("B", 200)
-        );
-        List<TrainConsistManagementApp.Coach> result = TrainConsistManagementApp.filterHighCapacity(inventory, 60);
-        assertEquals(2, result.size());
-    }
-
-    @Test
-    void testFilter_EmptyBogieList() {
-        List<TrainConsistManagementApp.Coach> inventory = new ArrayList<>();
-        List<TrainConsistManagementApp.Coach> result = TrainConsistManagementApp.filterHighCapacity(inventory, 60);
-        assertTrue(result.isEmpty());
-    }
-
-    @Test
-    void testFilter_OriginalListUnchanged() {
-        List<TrainConsistManagementApp.Coach> inventory = new ArrayList<>();
-        inventory.add(new TrainConsistManagementApp.Coach("A", 100));
-
-        TrainConsistManagementApp.filterHighCapacity(inventory, 60);
-
-        // Streams should not mutate the source list
-        assertEquals(1, inventory.size(), "The original list should remain unmodified.");
+    void testGrouping_OriginalListUnchanged() {
+        List<TrainConsistManagementApp.Coach> inventory = new ArrayList<>(Arrays.asList(
+                new TrainConsistManagementApp.Coach("Sleeper", 72)
+        ));
+        TrainConsistManagementApp.groupByType(inventory);
+        assertEquals(1, inventory.size());
     }
 }

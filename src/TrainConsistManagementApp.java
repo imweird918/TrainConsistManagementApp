@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class TrainConsistManagementApp {
@@ -13,20 +14,18 @@ public class TrainConsistManagementApp {
             this.seatCount = seatCount;
         }
 
-        public int getSeatCount() {
-            return seatCount;
-        }
+        public String getType() { return type; }
+        public int getSeatCount() { return seatCount; }
 
         @Override
         public String toString() {
-            return String.format("%s -> %d", type, seatCount);
+            return String.format("Capacity -> %d", seatCount);
         }
     }
 
-    public static List<Coach> filterHighCapacity(List<Coach> inventory, int threshold) {
+    public static Map<String, List<Coach>> groupByType(List<Coach> inventory) {
         return inventory.stream()
-                .filter(c -> c.getSeatCount() > threshold)
-                .collect(Collectors.toList());
+                .collect(Collectors.groupingBy(Coach::getType));
     }
 
     public static void main(String[] args) {
@@ -34,14 +33,20 @@ public class TrainConsistManagementApp {
         inventory.add(new Coach("Sleeper", 72));
         inventory.add(new Coach("AC Chair", 56));
         inventory.add(new Coach("First Class", 24));
-        inventory.add(new Coach("General", 90));
+        inventory.add(new Coach("Sleeper", 70));
+        inventory.add(new Coach("AC Chair", 60));
 
-        System.out.println("Full Inventory:");
-        inventory.forEach(System.out::println);
+        System.out.println("All Coaches:");
+        inventory.forEach(c -> System.out.println(c.getType() + " -> " + c.getSeatCount()));
 
-        List<Coach> results = filterHighCapacity(inventory, 60);
+        Map<String, List<Coach>> grouped = groupByType(inventory);
 
-        System.out.println("\nFiltered Results (> 60):");
-        results.forEach(System.out::println);
+        System.out.println("\nGrouped Coaches:");
+        grouped.forEach((type, list) -> {
+            System.out.println("\nCoach Type: " + type);
+            list.forEach(System.out::println);
+        });
+
+        System.out.println("\nUC9 grouping completed...");
     }
 }
