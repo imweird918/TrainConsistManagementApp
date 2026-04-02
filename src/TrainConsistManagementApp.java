@@ -1,24 +1,24 @@
-import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class TrainConsistManagementApp {
     public static void main(String[] args) {
         System.out.println("==========================================");
-        System.out.println(" UC6 - Map Bogie to Capacity (HashMap) ");
+        System.out.println(" UC7 - Sort Bogies by ID (TreeMap) ");
         System.out.println("==========================================\n");
 
-        Map<String, Integer> bogieCapacityMap = new HashMap<>();
+        Map<String, String> sortedBogieRegistry = new TreeMap<>();
 
-        bogieCapacityMap.put("First Class", 24);
-        bogieCapacityMap.put("Cargo", 120);
-        bogieCapacityMap.put("Sleeper", 72);
-        bogieCapacityMap.put("AC Chair", 56);
+        sortedBogieRegistry.put("BG104", "Sleeper");
+        sortedBogieRegistry.put("BG101", "Engine");
+        sortedBogieRegistry.put("BG103", "AC Chair");
+        sortedBogieRegistry.put("BG102", "Cargo");
 
-        System.out.println("Bogie Capacity Details:");
-        for (Map.Entry<String, Integer> entry : bogieCapacityMap.entrySet()) {
-            System.out.println(entry.getKey() + " -> " + entry.getValue());
+        System.out.println("Sorted Bogie Registry (By ID):");
+        for (Map.Entry<String, String> entry : sortedBogieRegistry.entrySet()) {
+            System.out.println(entry.getKey() + " : " + entry.getValue());
         }
 
-        System.out.println("\nUC6 bogie-capacity mapping completed...");
+        System.out.println("\nUC7 sorting validation completed...");
     }
 }
