@@ -1,36 +1,50 @@
+import java.util.Arrays;
+
 public class TrainConsistManagementApp {
 
     public static void main(String[] args) {
         System.out.println("==========================================================");
-        System.out.println(" UC18 - Bogie Search using Linear Search ");
+        System.out.println(" UC19 - Bogie Search using Binary Search ");
         System.out.println("==========================================================\n");
 
-        String[] bogieIds = {"BG101", "BG205", "BG309", "BG412", "BG550"};
-        String searchTarget = "BG309";
+        String[] bogieIds = {"BG309", "BG101", "BG550", "BG205", "BG412"};
+        String searchTarget = "BG205";
 
-        System.out.print("Bogie ID Inventory: ");
-        for (String id : bogieIds) System.out.print(id + " ");
-        System.out.println("\nSearching for: " + searchTarget);
+        System.out.println("Original IDs: " + Arrays.toString(bogieIds));
 
-        boolean found = findBogieById(bogieIds, searchTarget);
+        // Binary search requires sorted input
+        boolean found = binarySearchBogie(bogieIds, searchTarget);
 
-        if (found) {
-            System.out.println("Result: Bogie " + searchTarget + " was found in the system.");
-        } else {
-            System.out.println("Result: Bogie " + searchTarget + " NOT found.");
-        }
+        System.out.println("Searching for: " + searchTarget);
+        System.out.println("Result: " + (found ? "Bogie found in system." : "Bogie not found."));
 
-        System.out.println("\nUC18 search operation completed...");
+        System.out.println("\nUC19 search operation completed...");
     }
 
-    public static boolean findBogieById(String[] ids, String target) {
-        if (ids == null || target == null) return false;
+    public static boolean binarySearchBogie(String[] ids, String target) {
+        if (ids == null || ids.length == 0 || target == null) {
+            return false;
+        }
 
-        for (String id : ids) {
-            if (id.equals(target)) {
+        // Requirement: Ensure array is sorted for Binary Search
+        Arrays.sort(ids);
+
+        int low = 0;
+        int high = ids.length - 1;
+
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+            int comparison = target.compareTo(ids[mid]);
+
+            if (comparison == 0) {
                 return true;
+            } else if (comparison > 0) {
+                low = mid + 1;
+            } else {
+                high = mid - 1;
             }
         }
+
         return false;
     }
 }

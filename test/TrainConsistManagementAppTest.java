@@ -4,32 +4,45 @@ import org.junit.jupiter.api.Test;
 class TrainConsistManagementAppTest {
 
     @Test
-    void testSearch_BogieFound() {
+    void testBinarySearch_BogieFound() {
         String[] ids = {"BG101", "BG205", "BG309", "BG412", "BG550"};
-        assertTrue(TrainConsistManagementApp.findBogieById(ids, "BG309"));
+        assertTrue(TrainConsistManagementApp.binarySearchBogie(ids, "BG309"));
     }
 
     @Test
-    void testSearch_BogieNotFound() {
+    void testBinarySearch_BogieNotFound() {
         String[] ids = {"BG101", "BG205", "BG309", "BG412", "BG550"};
-        assertFalse(TrainConsistManagementApp.findBogieById(ids, "BG999"));
+        assertFalse(TrainConsistManagementApp.binarySearchBogie(ids, "BG999"));
     }
 
     @Test
-    void testSearch_FirstElementMatch() {
+    void testBinarySearch_FirstElementMatch() {
         String[] ids = {"BG101", "BG205", "BG309", "BG412", "BG550"};
-        assertTrue(TrainConsistManagementApp.findBogieById(ids, "BG101"));
+        assertTrue(TrainConsistManagementApp.binarySearchBogie(ids, "BG101"));
     }
 
     @Test
-    void testSearch_LastElementMatch() {
+    void testBinarySearch_LastElementMatch() {
         String[] ids = {"BG101", "BG205", "BG309", "BG412", "BG550"};
-        assertTrue(TrainConsistManagementApp.findBogieById(ids, "BG550"));
+        assertTrue(TrainConsistManagementApp.binarySearchBogie(ids, "BG550"));
     }
 
     @Test
-    void testSearch_SingleElementArray() {
+    void testBinarySearch_SingleElementArray() {
         String[] ids = {"BG101"};
-        assertTrue(TrainConsistManagementApp.findBogieById(ids, "BG101"));
+        assertTrue(TrainConsistManagementApp.binarySearchBogie(ids, "BG101"));
+    }
+
+    @Test
+    void testBinarySearch_EmptyArray() {
+        String[] ids = {};
+        assertFalse(TrainConsistManagementApp.binarySearchBogie(ids, "BG101"));
+    }
+
+    @Test
+    void testBinarySearch_UnsortedInputHandled() {
+        String[] ids = {"BG309", "BG101", "BG550", "BG205", "BG412"};
+        // The method sorts the array internally to handle this
+        assertTrue(TrainConsistManagementApp.binarySearchBogie(ids, "BG205"));
     }
 }
