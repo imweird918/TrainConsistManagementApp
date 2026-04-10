@@ -1,56 +1,34 @@
-/**
- * ==========================================================
- * MAIN CLASS - TrainConsistManagementApp
- * ==========================================================
- * * Use Case 16: Sort Passenger Bogies by Capacity
- * * Description:
- * This class demonstrates manual sorting of passenger
- * bogie capacities using the Bubble Sort algorithm
- * instead of built-in sorting utilities.
- */
+import java.util.Arrays;
+
 public class TrainConsistManagementApp {
 
     public static void main(String[] args) {
         System.out.println("==========================================================");
-        System.out.println(" UC16 - Manual Sorting using Bubble Sort ");
+        System.out.println(" UC17 - Alphabetical Sorting using Arrays.sort() ");
         System.out.println("==========================================================\n");
 
-        // Create array of passenger bogie capacities
-        int[] capacities = {72, 56, 24, 70, 60};
+        String[] bogieTypes = {"Sleeper", "AC Chair", "First Class", "General", "Luxury"};
 
-        // Display original order
-        System.out.println("Original Capacities:");
-        displayArray(capacities);
+        System.out.println("Original Bogie Types:");
+        displayArray(bogieTypes);
 
-        // ---- BUBBLE SORT LOGIC ----
-        bubbleSort(capacities);
+        sortBogieTypes(bogieTypes);
 
-        // Display sorted result
-        System.out.println("\nSorted Capacities (Ascending):");
-        displayArray(capacities);
+        System.out.println("\nSorted Bogie Types (Alphabetical):");
+        displayArray(bogieTypes);
 
-        System.out.println("\nUC16 sorting completed...");
+        System.out.println("\nUC17 sorting completed...");
     }
 
-    public static void bubbleSort(int[] arr) {
-        int n = arr.length;
-        // Outer loop controls number of passes
-        for (int i = 0; i < n - 1; i++) {
-            // Inner loop compares adjacent values
-            for (int j = 0; j < n - i - 1; j++) {
-                if (arr[j] > arr[j + 1]) {
-                    // Swap values when required
-                    int temp = arr[j];
-                    arr[j] = arr[j + 1];
-                    arr[j + 1] = temp;
-                }
-            }
+    public static void sortBogieTypes(String[] types) {
+        if (types != null) {
+            Arrays.sort(types);
         }
     }
 
-    private static void displayArray(int[] arr) {
-        for (int c : arr) {
-            System.out.print(c + " ");
+    private static void displayArray(String[] arr) {
+        for (String type : arr) {
+            System.out.print("[" + type + "] ");
         }
         System.out.println();
     }

@@ -4,42 +4,42 @@ import org.junit.jupiter.api.Test;
 class TrainConsistManagementAppTest {
 
     @Test
-    void testSort_BasicSorting() {
-        // Verifies that the Bubble Sort algorithm correctly sorts a typical unsorted array
-        int[] capacities = {72, 56, 24, 70, 60};
-        TrainConsistManagementApp.bubbleSort(capacities);
-        assertArrayEquals(new int[]{24, 56, 60, 70, 72}, capacities);
+    void testSort_BasicAlphabeticalSorting() {
+        String[] types = {"Sleeper", "AC Chair", "First Class", "General", "Luxury"};
+        TrainConsistManagementApp.sortBogieTypes(types);
+        String[] expected = {"AC Chair", "First Class", "General", "Luxury", "Sleeper"};
+        assertArrayEquals(expected, types);
+    }
+
+    @Test
+    void testSort_UnsortedInput() {
+        String[] types = {"Luxury", "General", "Sleeper", "AC Chair"};
+        TrainConsistManagementApp.sortBogieTypes(types);
+        String[] expected = {"AC Chair", "General", "Luxury", "Sleeper"};
+        assertArrayEquals(expected, types);
     }
 
     @Test
     void testSort_AlreadySortedArray() {
-        // Verifies that an already sorted array remains unchanged after sorting
-        int[] capacities = {24, 56, 60, 70, 72};
-        TrainConsistManagementApp.bubbleSort(capacities);
-        assertArrayEquals(new int[]{24, 56, 60, 70, 72}, capacities);
+        String[] types = {"AC Chair", "First Class", "General"};
+        TrainConsistManagementApp.sortBogieTypes(types);
+        String[] expected = {"AC Chair", "First Class", "General"};
+        assertArrayEquals(expected, types);
     }
 
     @Test
-    void testSort_DuplicateValues() {
-        // Verifies that duplicate capacities are handled correctly during sorting
-        int[] capacities = {72, 56, 56, 24};
-        TrainConsistManagementApp.bubbleSort(capacities);
-        assertArrayEquals(new int[]{24, 56, 56, 72}, capacities);
+    void testSort_DuplicateBogieNames() {
+        String[] types = {"Sleeper", "AC Chair", "Sleeper", "General"};
+        TrainConsistManagementApp.sortBogieTypes(types);
+        String[] expected = {"AC Chair", "General", "Sleeper", "Sleeper"};
+        assertArrayEquals(expected, types);
     }
 
     @Test
     void testSort_SingleElementArray() {
-        // Verifies that sorting a single element array does not modify the array
-        int[] capacities = {50};
-        TrainConsistManagementApp.bubbleSort(capacities);
-        assertArrayEquals(new int[]{50}, capacities);
-    }
-
-    @Test
-    void testSort_AllEqualValues() {
-        // Verifies that arrays containing identical values remain unchanged
-        int[] capacities = {40, 40, 40};
-        TrainConsistManagementApp.bubbleSort(capacities);
-        assertArrayEquals(new int[]{40, 40, 40}, capacities);
+        String[] types = {"Sleeper"};
+        TrainConsistManagementApp.sortBogieTypes(types);
+        String[] expected = {"Sleeper"};
+        assertArrayEquals(expected, types);
     }
 }
