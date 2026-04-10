@@ -1,51 +1,54 @@
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 
 class TrainConsistManagementAppTest {
 
     @Test
-    void testException_ValidCapacityCreation() throws TrainConsistManagementApp.InvalidCapacityException {
-        TrainConsistManagementApp.PassengerBogie bogie = new TrainConsistManagementApp.PassengerBogie("Sleeper", 72);
-        assertNotNull(bogie);
-        assertEquals(72, bogie.capacity);
+    void testCargo_SafeAssignment() {
+        TrainConsistManagementApp.GoodsBogie bogie = new TrainConsistManagementApp.GoodsBogie("Cylindrical");
+        bogie.assignCargo("Petroleum");
+        assertEquals("Petroleum", bogie.cargo);
     }
 
     @Test
-    void testException_NegativeCapacityThrowsException() {
-        Exception exception = assertThrows(TrainConsistManagementApp.InvalidCapacityException.class, () -> {
-            new TrainConsistManagementApp.PassengerBogie("AC", -10);
-        });
-        assertEquals("Capacity must be greater than zero", exception.getMessage());
+    void testCargo_UnsafeAssignmentHandled() {
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outContent));
+
+        TrainConsistManagementApp.GoodsBogie bogie = new TrainConsistManagementApp.GoodsBogie("Rectangular");
+        bogie.assignCargo("Petroleum");
+
+        assertTrue(outContent.toString().contains("Error: Unsafe cargo assignment!"));
     }
 
     @Test
-    void testException_ZeroCapacityThrowsException() {
-        assertThrows(TrainConsistManagementApp.InvalidCapacityException.class, () -> {
-            new TrainConsistManagementApp.PassengerBogie("General", 0);
-        });
+    void testCargo_CargoNotAssignedAfterFailure() {
+        TrainConsistManagementApp.GoodsBogie bogie = new TrainConsistManagementApp.GoodsBogie("Rectangular");
+        bogie.assignCargo("Petroleum");
+        assertNull(bogie.cargo);
     }
 
     @Test
-    void testException_ExceptionMessageValidation() {
-        try {
-            new TrainConsistManagementApp.PassengerBogie("Chair Car", 0);
-            fail("Expected InvalidCapacityException was not thrown");
-        } catch (TrainConsistManagementApp.InvalidCapacityException e) {
-            assertEquals("Capacity must be greater than zero", e.getMessage());
-        }
+    void testCargo_ProgramContinuesAfterException() {
+        TrainConsistManagementApp.GoodsBogie bogie1 = new TrainConsistManagementApp.GoodsBogie("Rectangular");
+        TrainConsistManagementApp.GoodsBogie bogie2 = new TrainConsistManagementApp.GoodsBogie("Cylindrical");
+
+        bogie1.assignCargo("Petroleum"); // Throws/Catches
+        bogie2.assignCargo("Grain");     // Continues
+
+        assertEquals("Grain", bogie2.cargo);
     }
 
     @Test
-    void testException_ObjectIntegrityAfterCreation() throws TrainConsistManagementApp.InvalidCapacityException {
-        TrainConsistManagementApp.PassengerBogie bogie = new TrainConsistManagementApp.PassengerBogie("First Class", 24);
-        assertEquals("First Class", bogie.type);
-        assertEquals(24, bogie.capacity);
-    }
+    void testCargo_FinallyBlockExecution() {
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outContent));
 
-    @Test
-    void testException_MultipleValidBogiesCreation() throws TrainConsistManagementApp.InvalidCapacityException {
-        TrainConsistManagementApp.PassengerBogie b1 = new TrainConsistManagementApp.PassengerBogie("TypeA", 10);
-        TrainConsistManagementApp.PassengerBogie b2 = new TrainConsistManagementApp.PassengerBogie("TypeB", 20);
-        assertNotSame(b1, b2);
+        TrainConsistManagementApp.GoodsBogie bogie = new TrainConsistManagementApp.GoodsBogie("Rectangular");
+        bogie.assignCargo("Petroleum");
+
+        assertTrue(outContent.toString().contains("Cargo validation completed"));
     }
 }
